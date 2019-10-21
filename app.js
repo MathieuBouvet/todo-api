@@ -21,8 +21,5 @@ mongoose
 
 app.use(corsPolicy);
 app.use("/api/users", userRoute);
-});
-
-app.use("/test", test);
 
 module.exports = app;
