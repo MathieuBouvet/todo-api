@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const corsPolicy = require("./middlewares/corsPolicy");
 
-const test = require("./routes/todo");
+const userRoute = require("./routes/user");
 
 const app = express();
 mongoose
@@ -20,8 +20,7 @@ mongoose
   });
 
 app.use(corsPolicy);
-app.get("/", (req, res) => {
-  res.status(200).send("Hello World ;)");
+app.use("/api/users", userRoute);
 });
 
 app.use("/test", test);
