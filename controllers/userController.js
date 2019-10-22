@@ -1,5 +1,15 @@
 const User = require("../models/user");
 
+exports.getAllUsers = (req, res) => {
+  User.find()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+};
+
 exports.getUser = (req, res) => {
   User.findById(req.params.id)
     .then(userFound => {
