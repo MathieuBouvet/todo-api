@@ -26,10 +26,13 @@ exports.addUser = (req, res) => {
   newUser
     .save()
     .then(data => {
-      res.status(201).json({
-        message: "User successfully created",
-        ressource: data,
-      });
+      res
+        .header("Location", req.originalUrl + "/" + data._id)
+        .status(201)
+        .json({
+          message: "User successfully created",
+          ressource: data,
+        });
     })
     .catch(error => {
       res.status(400).json(error);
