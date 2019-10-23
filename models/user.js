@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
+const todoSchema = mongoose.Schema({
+  title: { type: String, required: true },
+  status: String,
+});
+
 const userSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  todos: [todoSchema],
 });
 
 userSchema.plugin(uniqueValidator);
