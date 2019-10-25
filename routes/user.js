@@ -7,6 +7,7 @@ router.get("/", userController.getAllUsers);
 router.get("/:id", userController.getUser);
 
 router.use(bodyParser.json());
+
 router.post("/", userController.addUser);
 router.use("/:id/todos", todosRoutes);
 
