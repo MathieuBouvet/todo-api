@@ -39,3 +39,25 @@ exports.addUser = (req, res) => {
       res.status(400).json(error);
     });
 };
+
+exports.login = (req, res) => {
+  const { username, password } = req.body;
+  let loggedInUser = null;
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        return Promise.reject();
+      }
+      loggedInUser = user;
+      return bcrypt.compare(password, user.password);
+    })
+    .then(valid => {
+      if (!valid) {
+        return Promise.reject();
+      }
+      res.status(200).json({ user: loggedInUser._id, token: "token" });
+    })
+    .catch(() => {
+      res.status(401).json({ error: "Invalid Credentials" });
+    });
+};
