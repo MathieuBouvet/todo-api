@@ -5,8 +5,10 @@ const bodyParser = require("body-parser");
 
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.getUser);
-router.post("/", bodyParser.json(), userController.addUser);
 
-router.use("/:id/todos", bodyParser.json(), todosRoutes);
+router.use(bodyParser.json());
+router.post("/", userController.addUser);
+router.use("/:id/todos", todosRoutes);
+
 
 module.exports = router;
