@@ -10,5 +10,6 @@ router.use(bodyParser.json());
 router.post("/", userController.addUser);
 router.use("/:id/todos", todosRoutes);
 
+router.post("/login", userController.login);
 
 module.exports = router;
