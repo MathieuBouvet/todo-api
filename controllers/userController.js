@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 exports.getAllUsers = (req, res) => {
   User.find()
@@ -21,10 +22,10 @@ exports.getUser = (req, res) => {
 };
 
 exports.addUser = (req, res) => {
-  const newUser = new User({ ...req.body });
-
-  newUser
-    .save()
+  const { username, password } = req.body;
+  bcrypt
+    .hash(password, 10)
+    .then(password => new User({ username, password }).save())
     .then(data => {
       res
         .header("Location", req.originalUrl + "/" + data._id)
