@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.getAllUsers = (req, res) => {
   User.find()
@@ -55,7 +56,12 @@ exports.login = (req, res) => {
       if (!valid) {
         return Promise.reject();
       }
-      res.status(200).json({ user: loggedInUser._id, token: "token" });
+      const token = jwt.sign(
+        { userId: loggedInUser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" }
+      );
+      res.status(200).json({ user: loggedInUser._id, token });
     })
     .catch(() => {
       res.status(401).json({ error: "Invalid Credentials" });
