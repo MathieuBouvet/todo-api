@@ -61,7 +61,13 @@ exports.login = (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "24h" }
       );
-      res.status(200).json({ user: loggedInUser._id, token });
+      res
+        .status(200)
+        .json({
+          user: loggedInUser._id,
+          token,
+          username: loggedInUser.username,
+        });
     })
     .catch(() => {
       res.status(401).json({ error: "Invalid Credentials" });
