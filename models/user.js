@@ -3,7 +3,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 const todoSchema = mongoose.Schema({
   text: { type: String, required: true },
-  status: String,
+  done: { type: Boolean, required: true },
 });
 
 const userSchema = mongoose.Schema({
