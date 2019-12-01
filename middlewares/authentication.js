@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken");
+const Cookies = require("cookies");
 
-const getTokenFromHeader = req => {
-  return req.headers.authorization.split(" ")[1];
+const getTokenFromCookie = (req, res) => {
+  return new Cookies(req, res).get("access_token");
 };
 
 module.exports = (req, res, next) => {
   try {
-    const token = getTokenFromHeader(req);
+    const token = getTokenFromCookie(req, res);
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     if (!decodedToken.userId) {
       throw "Invalid token";
