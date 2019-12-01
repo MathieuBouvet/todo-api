@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Cookie = require("cookies");
 
 exports.getAllUsers = (req, res) => {
   User.find()
@@ -61,13 +62,14 @@ exports.login = (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "24h" }
       );
-      res
-        .status(200)
-        .json({
-          user: loggedInUser._id,
-          token,
-          username: loggedInUser.username,
-        });
+      new Cookie(req, res).set("access_token", token, {
+        httpOnly: true,
+        secure: false,
+      });
+      res.status(200).json({
+        user: loggedInUser._id,
+        username: loggedInUser.username,
+      });
     })
     .catch(() => {
       res.status(401).json({ error: "Invalid Credentials" });
