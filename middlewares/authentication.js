@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
       throw "Invalid token";
     } else {
       req.userId = decodedToken.userId;
+      req.csrfTokenFromJwt = decodedToken.csrfToken;
       next();
     }
   } catch (err) {
