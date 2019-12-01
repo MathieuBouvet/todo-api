@@ -2,6 +2,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Cookie = require("cookies");
+const uid = require("uid-safe");
 
 exports.getAllUsers = (req, res) => {
   User.find()
@@ -57,8 +58,11 @@ exports.login = (req, res) => {
       if (!valid) {
         return Promise.reject();
       }
+      return uid(18);
+    })
+    .then(csrfToken => {
       const token = jwt.sign(
-        { userId: loggedInUser._id },
+        { userId: loggedInUser._id, csrfToken },
         process.env.JWT_SECRET,
         { expiresIn: "24h" }
       );
@@ -69,6 +73,7 @@ exports.login = (req, res) => {
       res.status(200).json({
         user: loggedInUser._id,
         username: loggedInUser.username,
+        csrfToken,
       });
     })
     .catch(() => {
