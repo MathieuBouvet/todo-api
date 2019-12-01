@@ -45,22 +45,22 @@ exports.addUser = (req, res) => {
 
 exports.login = (req, res) => {
   const { username, password } = req.body;
-  let loggedInUser = null;
-  User.findOne({ username })
+  const userCheck = User.findOne({ username })
     .then(user => {
       if (!user) {
         return Promise.reject();
       }
-      loggedInUser = user;
-      return bcrypt.compare(password, user.password);
+      return Promise.all([bcrypt.compare(password, user.password), user]);
     })
-    .then(valid => {
+    .then(([valid, user]) => {
       if (!valid) {
         return Promise.reject();
       }
-      return uid(18);
-    })
-    .then(csrfToken => {
+      return user;
+    });
+  const csrfTokenGen = uid(18);
+  Promise.all([userCheck, csrfTokenGen])
+    .then(([loggedInUser, csrfToken]) => {
       const token = jwt.sign(
         { userId: loggedInUser._id, csrfToken },
         process.env.JWT_SECRET,
