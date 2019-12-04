@@ -80,3 +80,29 @@ exports.login = (req, res) => {
       res.status(401).json({ error: "Invalid Credentials" });
     });
 };
+
+exports.passportLogin = (req, res) => {
+  uid(18)
+    .then(csrfToken => {
+      const token = jwt.sign(
+        {
+          userId: req.user._id,
+          csrfToken,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" }
+      );
+      new Cookie(req, res).set("access_token", token, {
+        httpOnly: true,
+        secure: false,
+      });
+      res.status(200).json({
+        user: req.user._id,
+        username: req.user.username,
+        csrfToken,
+      });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+};
