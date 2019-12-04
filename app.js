@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const corsPolicy = require("./middlewares/corsPolicy");
 
 const userRoute = require("./routes/user");
@@ -20,6 +21,7 @@ mongoose
   });
 
 app.use(corsPolicy);
+app.use(passport.initialize());
 app.use("/api/users", userRoute);
 
 module.exports = app;
