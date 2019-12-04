@@ -12,7 +12,7 @@ passport.use(
         .then(user => {
           return Promise.all([
             user,
-            user ? bcrypt.compare(user.password, password) : false,
+            user ? bcrypt.compare(password, user.password) : false,
           ]);
         })
         .then(([user, validPassword]) => {
