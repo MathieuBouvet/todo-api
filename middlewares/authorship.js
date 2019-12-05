@@ -2,7 +2,7 @@ const authentication = require("./authentication");
 
 module.exports = (req, res, next) => {
   authentication(req, res, () => {
-    if (req.userId === req.params.id) {
+    if (req.user.id === req.params.id) {
       next();
     } else {
       return res
