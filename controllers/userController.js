@@ -94,7 +94,7 @@ exports.passportLogin = (req, res) => {
       );
       new Cookie(req, res).set("access_token", token, {
         httpOnly: true,
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
       });
       res.status(200).json({
         user: req.user._id,
