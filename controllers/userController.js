@@ -43,44 +43,6 @@ exports.addUser = (req, res) => {
     });
 };
 
-exports.login = (req, res) => {
-  const { username, password } = req.body;
-  const userCheck = User.findOne({ username })
-    .then(user => {
-      if (!user) {
-        return Promise.reject();
-      }
-      return Promise.all([bcrypt.compare(password, user.password), user]);
-    })
-    .then(([valid, user]) => {
-      if (!valid) {
-        return Promise.reject();
-      }
-      return user;
-    });
-  const csrfTokenGen = uid(18);
-  Promise.all([userCheck, csrfTokenGen])
-    .then(([loggedInUser, csrfToken]) => {
-      const token = jwt.sign(
-        { userId: loggedInUser._id, csrfToken },
-        process.env.JWT_SECRET,
-        { expiresIn: "24h" }
-      );
-      new Cookie(req, res).set("access_token", token, {
-        httpOnly: true,
-        secure: false,
-      });
-      res.status(200).json({
-        user: loggedInUser._id,
-        username: loggedInUser.username,
-        csrfToken,
-      });
-    })
-    .catch(() => {
-      res.status(401).json({ error: "Invalid Credentials" });
-    });
-};
-
 exports.passportLogin = (req, res) => {
   uid(18)
     .then(csrfToken => {
