@@ -6,6 +6,9 @@ const corsPolicy = require("./middlewares/corsPolicy");
 const userRoute = require("./routes/user");
 
 const app = express();
+if (process.env === "production") {
+  app.set("trust proxy", "loopback");
+}
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
