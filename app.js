@@ -6,7 +6,7 @@ const corsPolicy = require("./middlewares/corsPolicy");
 const userRoute = require("./routes/user");
 
 const app = express();
-if (process.env === "production") {
+if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", "loopback");
 }
 mongoose
